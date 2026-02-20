@@ -24,7 +24,9 @@ Key characteristics of the original display:
 
 ## My Replacement — Sharp LQ104V1DG51
 
-I used a Sharp **LQ104V1DG51** — a modern 10.4" 640×480 panel. See [`datasheets/LQ104V1DG51_Datasheet.pdf`](datasheets/LQ104V1DG51_Datasheet.pdf). Crucially, this panel natively supports 480-line, 400-line, and 350-line modes — the display mode is selected by the polarity combination of the H-Sync and V-Sync signals, which is exactly how the Compaq's video card signals the mode. This means all three DOS video modes work without any additional circuitry.
+After an exhaustive search and lots of trial and error, I settled on a Sharp **LQ104V1DG51** — a modern 10.4" 640×480 panel. See [`datasheets/LQ104V1DG51_Datasheet.pdf`](datasheets/LQ104V1DG51_Datasheet.pdf). The original goal was to find a panel with a fixed horizontal display start at clock 144 - matching the Compaq's video card timing - whether or not it had a Data Enable signal. That would have avoided building a custom delay circuit entirely. But no such panel existed, or if it did, it didn't support the 400-line and 350-line DOS video modes.
+
+The LQ104V1DG51 was the best compromise. It natively supports 480-line, 400-line, and 350-line modes - the display mode is selected by the polarity combination of the H-Sync and V-Sync signals, which is exactly how the Compaq's video card signals the mode. This means all three DOS video modes work without any additional circuitry. The trade-off is needing the BLANK-to-DE delay circuit to handle the horizontal alignment.
 
 | Mode | H-Sync | V-Sync |
 |------|--------|--------|
@@ -38,21 +40,22 @@ I used a Sharp **LQ104V1DG51** — a modern 10.4" 640×480 panel. See [`datashee
 
 | | Original (LQ10D016) | Replacement (LQ104V1DG51) |
 |---|---|---|
+| Connector | Proprietary 30-pin (undocumented) | Standard 31-pin TTL |
 | Color depth | 3-bit/channel (512 colors) | 6-bit/channel (262,144 colors) |
-| Backlight | HCFT (heated cathode) | CCFL (cold cathode) |
+| Backlight | HCFT (heated cathode), 12V supply | CCFL (cold cathode), 5V supply |
 | Data Enable | Not required | Required (ENAB pin 27) |
 | H-Sync display start | Clock 144 | Clock 104 |
-| 400/350 line modes | Supported | Supported (via H-Sync/V-Sync polarity) |
 
 ### Challenges
 
 There are several issues to solve when swapping the display:
 
-1. **40-pixel horizontal shift** — The new display starts drawing 40 clock cycles earlier than the original, shifting the image left.
-2. **No Data Enable signal** — The Compaq's video card doesn't output a DE signal, but the new display requires one.
-3. **Color depth mismatch** — The video card outputs 3 bits per color; the new display expects 6-8 bits.
-4. **Backlight incompatibility** — Completely different inverter requirements.
-5. **70 Hz DOS mode** — New displays may not handle the 400-line/70 Hz and 350-line/70 Hz modes used in DOS. The image will wrap/duplicate at the bottom.
+1. **Proprietary 30-pin connector** — The Compaq uses a proprietary 30-pin ribbon cable to connect the video card to the display. There is no documentation for this connector — the pinout had to be reverse-engineered. The replacement display uses a standard 31-pin interface, so an adapter cable is needed to bridge the two.
+2. **40-pixel horizontal shift** — The new display starts drawing 40 clock cycles earlier than the original, shifting the image left.
+3. **No Data Enable signal** — The Compaq's video card doesn't output a DE signal, but the new display requires one.
+4. **Color depth mismatch** — The video card outputs 3 bits per color; the new display expects 6-8 bits.
+5. **Backlight incompatibility** — Completely different inverter requirements.
+6. **70 Hz DOS mode** — New displays may not handle the 400-line/70 Hz and 350-line/70 Hz modes used in DOS. The image will wrap/duplicate at the bottom (the display I found supports it).
 
 ## Pin Mapping
 
@@ -61,14 +64,14 @@ The full pin-by-pin mapping between the old 30-pin display connector and the new
 Key wiring notes:
 
 - The original display's **3 color bits per channel** (e.g., RED LSB/RED/RED MSB) map to the **upper 3 bits** of the new display's 6-bit channels (R3-R5, G3-G5, B3-B5). The lower bits (R0-R2, G0-G2, B0-B2) are tied to **GND**.
-- **Pin 28** on the old connector was unused ("nix") — this is where the generated Data Enable signal is routed to the new display.
+- **Pin 28** on the old connector was unused (how lucky is that?!) - this is where the generated Data Enable signal is routed to the new display.
 - **H-Sync** (old pin 4) and **V-Sync** (old pin 6) connect to the new display normally.
 - **Dot Clock** (old pin 2, 25 MHz) connects to **DCLK** (new pin 2).
-- Power: old pin 7/8 (+5V) → new pin 28/29 (VCC). Old pin 30 (+12V) is used for the backlight inverter only.
+- Power: old pin 7/8 (+5V) → new pin 28/29 (VCC). Old pin 30 (+12V) isn't used as the display doesn't need a 12V source.
 
 ## Adapter Cable
 
-Rather than hand-soldering 30 individual wires, I used a **40-pin to 31-pin TTL LVDS cable with a breakout board** ([eBay item 173579595077](https://www.ebay.com/itm/173579595077?var=472260346154)). The breakout board has header pins that can be soldered to the Compaq's original 30-pin ribbon cable connector. This makes the wiring much cleaner and more reliable.
+The replacement display has a standard 31-pin TTL interface, but the Compaq's video card outputs through its proprietary undocumented 30-pin ribbon cable — there's no way to plug one into the other directly. Rather than hand-soldering 30 individual wires, I used a **40-pin to 31-pin TTL LVDS cable with a breakout board** ([eBay item 173579595077](https://www.ebay.com/itm/173579595077?var=472260346154)). I could have custom made one for exactly 30 pins we need, but this worked and is off the shelf. The 31-pin end plugs directly into the new display, and the breakout board on the other end has header pins that can be soldered to the Compaq's original 30-pin ribbon cable connector. This bridges the proprietary Compaq interface to the standard display connector cleanly and reliably.
 
 ![Adapter board](images/01-adapter-board.jpg)
 
@@ -76,19 +79,21 @@ The full 40-pin connector pinout is documented in [`40-pin-connector-pinout.md`]
 
 ## Data Enable / Horizontal Alignment Circuit
 
-The new display requires a **Data Enable (DE)** signal and starts drawing at clock 104 instead of 144, causing a 40-pixel horizontal offset. The solution (originally devised by *Beckenrandschwimmer* on [DOSReloaded](https://dosreloaded.de/forum/thread/7354-compaq-portable-486c-66/?postID=254850#post254850)) uses the **BLANK signal** from the graphics card's DAC as a delayed Data Enable.
+The new display requires a **Data Enable (DE)** signal and starts drawing at clock 104 instead of 144, causing a 40-pixel horizontal offset. The solution (originally devised by *Beckenrandschwimmer* on [DOSReloaded](https://dosreloaded.de/forum/thread/7354-compaq-portable-486c-66/?postID=254850#post254850)) uses the **BLANK signal** from the graphics card's RAMDAC as a delayed Data Enable.
 
 ### The Problem
 
-The Compaq's Cirrus Logic video controller outputs standard VGA sync signals (H-Sync, V-Sync) and a BLANK signal from the DAC. The original display used H-Sync and V-Sync directly to know when to start drawing pixels, with a fixed horizontal display start at clock cycle 144 after H-Sync.
+The Compaq's Cirrus Logic video controller outputs standard VGA sync signals (H-Sync, V-Sync) and a BLANK signal from the RAMDAC. The video card uses a **Brooktree Bt47x series RAMDAC** (Bt471/476/478 family) — the BLANK* output is at **pin 7** on the 44-pin PLCC package. This is a TTL-compatible signal that goes low during the blanking interval (see Tables 4-6 in the datasheet). See [`datasheets/BT471_RAMDAC_Datasheet.pdf`](datasheets/BT471_RAMDAC_Datasheet.pdf).
 
-Modern replacement displays don't use H-Sync for pixel positioning — they require a **Data Enable (DE)** signal that goes high during the active display period. The new display also expects pixel data to begin at clock cycle 104. Since the Compaq's video card sends pixel data starting at clock 144, we need to delay the DE signal by exactly 40 clock cycles (approximately 1.58 µs at 25.175 MHz) to align the image.
+The original display used H-Sync and V-Sync directly to know when to start drawing pixels, with a fixed horizontal display start at clock cycle 144 after H-Sync.
+
+Modern replacement displays don't use H-Sync for pixel positioning - they require a **Data Enable (DE)** signal that goes high during the active display period. The new display also expects pixel data to begin at clock cycle 104. Since the Compaq's video card sends pixel data starting at clock 144, we need to delay the DE signal by exactly 40 clock cycles (approximately 1.58 µs at 25.175 MHz) to align the image.
 
 ![DOS boot showing the horizontal shift caused by the H-Sync mismatch](images/02-dos-boot-test.jpg)
 
 ### RC Delay Approach
 
-The circuit uses a simple RC (resistor-capacitor) delay network sandwiched between two inverter stages. The BLANK signal from the DAC is active-low during the display period. It gets inverted, delayed through the RC network, then inverted again to produce a properly timed DE output.
+The circuit uses a simple RC (resistor-capacitor) delay network sandwiched between two inverter stages. The BLANK* signal from the RAMDAC is active-low during the blanking interval — when BLANK* is high, the display is in the active region (see Tables 4-6 in the Bt471 datasheet). It gets inverted, delayed through the RC network, then inverted again to produce a properly timed DE output.
 
 ![RC delay schematic](images/08-rc-delay-schematic.png)
 
@@ -102,7 +107,7 @@ The **SN74AS02N** is a quad 2-input NOR gate IC. A NOR gate with both inputs tie
 
 The diagram above shows the physical wiring on the video card. The 74AS02 is soldered dead-bug style (upside down) directly onto the video card PCB. Key connections:
 
-- **BLANK input** is tapped from the DAC's BLANK output pin on the video card with a wire
+- **BLANK input** is tapped from **pin 7 (BLANK\*)** on the Bt47x RAMDAC on the video card with a wire
 - **Gate 1** (pins 2+3 → pin 1): Both inputs tied to BLANK. Output is inverted BLANK.
 - **RC network**: Connected between Gate 1 output (pin 1) and Gate 2 input. The trimmer pot (R) and capacitor (C) to GND create the adjustable delay.
 - **Gate 2** (pins 5+6 → pin 4): Both inputs tied to the delayed signal. Output is the final DE signal, now re-inverted and delayed.
@@ -119,8 +124,6 @@ The "Advanced Schottky" (AS) variant is chosen for its fast propagation delay (~
 | IC | SN74AS02N | Quad 2-input NOR gate, two gates used as inverters |
 | C1 | 22 pF | Timing capacitor (150 pF also works but gives coarser adjustment) |
 | R1 | Bourns 3006P-1-222LF (2.2 kΩ) | Precision multi-turn trimmer pot — fine-tunes the delay to align the image horizontally ([Mouser](https://www.mouser.com/ProductDetail/Bourns/3006P-1-222LF?qs=RwhcuQjtsMp2J7D9glJLaw%3D%3D)) |
-| R2 | Bourns 3006P-1-222LF (2.2 kΩ) | Precision multi-turn trimmer pot — second pot for fine-tuning signal quality ([Mouser](https://www.mouser.com/ProductDetail/Bourns/3006P-1-222LF?qs=RwhcuQjtsMp2J7D9glJLaw%3D%3D)) |
-| C_bypass | 220 nF ceramic | Decoupling cap directly across IC VCC/GND pins |
 
 ### Calibration
 
@@ -130,9 +133,11 @@ The "Advanced Schottky" (AS) variant is chosen for its fast propagation delay (~
 
 ### My Implementation Notes
 
-I added two trimmer pots instead of one to allow finer control over the signal. One pot adjusts the main RC delay for horizontal alignment, while the second pot fine-tunes the signal to get a clean, stable image. Both pots are visible in the breadboard and video card photos below.
+I added two trimmer pots instead of one to allow finer control over the signal. When I first protyped this, the signal wasn't clean and finer tuning was required, but I kept both anyways. One pot adjusts the main RC delay for horizontal alignment, while the second pot fine-tunes the signal to get a clean, stable image. Both pots are visible in the breadboard and video card photos below.
 
 For +5V and GND, I used a multimeter to probe the video card's components to find suitable tap points with a solid +5V and GND connection near where the 74AS02 is mounted. The yellow 220 nF ceramic disc bypass cap is soldered directly across the IC's VCC and GND pins (pin 14 and pin 7).
+
+I placed the components down at the bottom where there is airflow from the case exhaust fan (after it's installed).
 
 ![Close-up of 74AS02 circuit on the video card](images/10-circuit-closeup.jpg)
 
@@ -185,7 +190,8 @@ screen-replacement/
 ├── datasheets/
 │   ├── Compaq_Display_Pinout_Mapping.pdf        # Old-to-new pin mapping with connector photos
 │   ├── LQ10D011_Datasheet.pdf                  # Reference datasheet (closest match to original LQ10D016)
-│   └── LQ104V1DG51_Datasheet.pdf               # Replacement display datasheet (supports 480/400/350 line modes)
+│   ├── LQ104V1DG51_Datasheet.pdf               # Replacement display datasheet (supports 480/400/350 line modes)
+│   └── BT471_RAMDAC_Datasheet.pdf              # Brooktree Bt471/476/478 RAMDAC datasheet (BLANK* pin 7)
 └── images/
     ├── 01-adapter-board.jpg                     # 40→31 pin TTL adapter with breakout board
     ├── 02-dos-boot-test.jpg                     # MS-DOS booting on new display

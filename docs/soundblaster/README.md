@@ -16,13 +16,16 @@ The CT3900 uses **jumpers** to set IRQ, DMA, and I/O port addresses directly on 
 
 ![Sound Blaster AWE32 installed in the Compaq Portable 486c](images/01-awe32-installed.jpg)
 
+See [`AWE32_Getting_Started.pdf`](AWE32_Getting_Started.pdf) for the original Creative manual (v1.4, December 1996).
+
 **TODO:** Add configuration details (IRQ, DMA, I/O port settings).
 
 ## Files in This Directory
 
 ```
 soundblaster/
-├── README.md                   # This file
+├── README.md                      # This file
+├── AWE32_Getting_Started.pdf      # Creative AWE32 manual (v1.4, December 1996)
 └── images/
-    └── 01-awe32-installed.jpg  # AWE32 installed in EISA slot
+    └── 01-awe32-installed.jpg     # AWE32 installed in EISA slot
 ```
