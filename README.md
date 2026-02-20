@@ -40,6 +40,14 @@ The keyboard cable is a very proprietary connector and becomes brittle with age.
 
 **[Full keyboard restoration documentation →](docs/keyboard-restoration/README.md)**
 
+### 4. Hard Drive Replacement (Future)
+
+The original 210 MB Conner 3.5" hard drive is, against all odds, still working perfectly. This thing has been spinning since the early '90s and shows absolutely no signs of stopping. It owes me nothing. Every time I power on the machine I half-expect to hear the click of death, but instead it just boots right up like it's 1993 and it has something to prove.
+
+When the day inevitably comes - and it will, because spinning rust doesn't live forever no matter how stubborn it is - the plan is to replace it with an **IDE-to-CompactFlash adapter**. Dead silent, no moving parts, boots faster, and the CF card can be swapped out on a modern machine for easy file transfers. It's the most popular hard drive replacement in the retro community for good reason.
+
+But until that drive actually dies, I refuse to fix what isn't broken. I will not be the one to end its career. That Conner has earned its retirement on its own terms.
+
 ## Beyond Restoration
 
 ### Processor Upgrade to AMD Am5x86-P75
