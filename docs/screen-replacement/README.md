@@ -150,7 +150,7 @@ My PSU was already rebuilt, so I had a clean, stable 5V rail available to power 
 - Reverse-biased protection diode across the regulator output
 
 **Regardless of your 5V source:**
-- 220 nF bypass cap directly across the IC power pins is mandatory
+- 220 nF bypass cap directly across the IC power pins is mandatory (not in my pics, it was added later)
 - Mount the IC away from heat sources; temperature drift can shift the image up to 4 pixels
 
 ![Delay circuit prototyped on breadboard](images/04-delay-circuit-breadboard.jpg)
