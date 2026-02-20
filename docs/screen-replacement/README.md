@@ -181,6 +181,8 @@ The replacement LQ104V1DG51 is physically much smaller than the original LQ10D01
 
 ![DOOM running on the restored Compaq](images/05-doom-running.jpg)
 
+*It's not a vintage computing project until you run DOOM on it. I don't make the rules - the retro community bylaws are very clear on this. No DOOM screenshot, no credibility.*
+
 ## Files in This Directory
 
 ```
