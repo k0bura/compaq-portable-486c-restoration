@@ -4,16 +4,17 @@ A documentation project tracking the restoration of a Compaq Portable 486c/66 �
 
 ## Machine Specifications
 
-| Component | Details |
-|-----------|---------|
-| **CPU** | Intel 486DX2-66 MHz |
-| **RAM** | 4 MB (original), upgraded to 24 MB |
-| **Hard Drive** | 210 MB Conner 3.5" |
-| **Expansion** | 2× EISA slots |
-| **Floppy** | 3.5" floppy drive |
-| **Display** | 10.4" VGA TFT (640×480) |
-| **Audio** | AWE64 (added via EISA slot) |
-| **Architecture** | Small backplane with CPU card + RAM |
+| Component | Original | Upgraded |
+|-----------|----------|----------|
+| **CPU** | IBM Blue Lightning DX2-66 MHz | AMD Am5x86-P75 (133 MHz, 4x multiplier) |
+| **RAM** | 4 MB | 32 MB |
+| **Hard Drive** | 210 MB Conner 3.5" | — |
+| **Display** | Sharp LQ10D016 10.4" TFT (640×480) | Sharp LQ104V1DG51 10.4" TFT (640×480) |
+| **Audio** | None | Sound Blaster AWE32 CT3900 (EISA slot 1) |
+| **Expansion** | 2× EISA slots | SCM ISAC2PR10 PCMCIA adapter (EISA slot 2) |
+| **PCMCIA** | — | Cisco Aironet 350 (WiFi) + SanDisk CF adapter |
+| **Floppy** | 3.5" floppy drive | — |
+| **Architecture** | Small backplane with CPU card + RAM | — |
 
 ## Restoration Log
 
