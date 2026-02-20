@@ -152,7 +152,7 @@ My PSU was already rebuilt, so I had a clean, stable 5V rail available to power 
 
 ![Video card with 74AS02 and BLANK tap wires installed](images/06-video-card-modifications.jpg)
 
-**TODO:** Add pictures of the modified video card mounted in the case.
+![Modified video card installed in the Compaq chassis](images/11-video-card-installed.jpg)
 
 ## Backlight
 
@@ -196,7 +196,8 @@ screen-replacement/
     ├── 07-internals-overview.jpg                # Motherboard and video card in chassis
     ├── 08-rc-delay-schematic.png                # RC delay circuit concept diagram
     ├── 09-74as02-wiring-diagram.png             # 74AS02 NOR gate pin wiring and logic diagram
-    └── 10-circuit-closeup.jpg                   # Close-up of 74AS02 circuit soldered on video card
+    ├── 10-circuit-closeup.jpg                   # Close-up of 74AS02 circuit soldered on video card
+    └── 11-video-card-installed.jpg              # Modified video card installed in chassis
 ```
 
 ## Resources
