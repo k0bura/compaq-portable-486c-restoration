@@ -124,6 +124,7 @@ The "Advanced Schottky" (AS) variant is chosen for its fast propagation delay (~
 | IC | SN74AS02N | Quad 2-input NOR gate, two gates used as inverters |
 | C1 | 22 pF | Timing capacitor (150 pF also works but gives coarser adjustment) |
 | R1 | Bourns 3006P-1-222LF (2.2 kΩ) | Precision multi-turn trimmer pot — fine-tunes the delay to align the image horizontally ([Mouser](https://www.mouser.com/ProductDetail/Bourns/3006P-1-222LF?qs=RwhcuQjtsMp2J7D9glJLaw%3D%3D)) |
+| C_bypass | 220 nF ceramic | Decoupling cap directly across IC VCC/GND pins |
 
 ### Calibration
 
