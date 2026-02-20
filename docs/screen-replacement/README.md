@@ -32,7 +32,7 @@ I used a Sharp **LQ104V1DG51** — a modern 10.4" 640×480 panel. See [`datashee
 | 400 lines | Negative | Positive |
 | 350 lines | Positive | Negative |
 
-Another community member (*Beckenrandschwimmer* on DOSReloaded) successfully used a **Sharp LQ10D421**, and a third person used an **LQ104V1DG11**. The approach is the same for all of these.
+*Beckenrandschwimmer* successfully used a **Sharp LQ10D421**, and a third person used an **LQ104V1DG11**. The approach is the same for all of these.
 
 ### Key Differences from the Original
 
