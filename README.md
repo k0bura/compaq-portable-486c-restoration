@@ -8,7 +8,7 @@ A documentation project tracking the restoration of a Compaq Portable 486c/66 �
 |-----------|----------|----------|
 | **CPU** | IBM Blue Lightning DX2-66 MHz | AMD Am5x86-P75 (133 MHz, 4x multiplier) |
 | **RAM** | 4 MB | 32 MB |
-| **Hard Drive** | 210 MB Conner 3.5" | — |
+| **Hard Drive** | 210 MB Conner 3.5" | This still works! |
 | **Display** | Sharp LQ10D016 10.4" TFT (640×480) | Sharp LQ104V1DG51 10.4" TFT (640×480) |
 | **Audio** | None | Sound Blaster AWE32 CT3900 (EISA slot 1) |
 | **Expansion** | 2× EISA slots | SCM ISAC2PR10 PCMCIA adapter (EISA slot 2) |
